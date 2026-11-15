@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -14,7 +13,8 @@ import (
 func HandlerMain(res http.ResponseWriter, req *http.Request) {
 	curDir, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
+		http.Error(res, "internal error", http.StatusInternalServerError)
+		return
 	}
 	curDir = filepath.Join(curDir, "..")
 	fileName := "index.html"
