@@ -17,18 +17,6 @@ func HandlerMain(res http.ResponseWriter, req *http.Request) {
 }
 
 func HandlerUpload(res http.ResponseWriter, req *http.Request) {
-	curDir, err := os.Getwd() //определение директории
-	if err != nil {
-		http.Error(res, "path not found", http.StatusBadRequest)
-		return
-	}
-
-	root, err := os.OpenRoot(curDir) //ограничение доступа вне директории
-	if err != nil {
-		http.Error(res, "internal error", http.StatusInternalServerError)
-		return
-	}
-	defer root.Close()
 
 	if err := req.ParseMultipartForm(10 << 20); err != nil {
 		http.Error(res, "limit has been exceeded", http.StatusBadRequest)
@@ -55,7 +43,7 @@ func HandlerUpload(res http.ResponseWriter, req *http.Request) {
 	timeNow := time.Now().UTC().Format("2006-01-02T15-04-05")
 	locFileName := fmt.Sprintf("%s%s", timeNow, ext) //формируеется имя локального файла
 
-	loc, err := root.Create(locFileName) //создание локального файла
+	loc, err := os.Create(locFileName) //создание локального файла
 	if err != nil {
 		http.Error(res, "ошибка при создании файла", http.StatusInternalServerError)
 		return
