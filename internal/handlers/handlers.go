@@ -5,38 +5,12 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
 func HandlerMain(res http.ResponseWriter, req *http.Request) {
-	curDir, err := os.Getwd()
-	if err != nil {
-		http.Error(res, "internal error", http.StatusInternalServerError)
-		return
-	}
-	curDir = filepath.Join(curDir, "..")
-	fileName := "index.html"
-	root, err := os.OpenRoot(curDir)
-	if err != nil {
-		http.Error(res, "internal error", http.StatusInternalServerError)
-		return
-	}
-	defer root.Close()
-
-	file, err := root.Open(fileName)
-	if err != nil {
-		http.Error(res, fmt.Sprintf("file %s wasn't found", fileName), http.StatusNotFound)
-		return
-	}
-	defer file.Close()
-
-	_, err = io.Copy(res, file)
-	if err != nil {
-		http.Error(res, "file sending error", http.StatusInternalServerError)
-		return
-	}
+	http.ServeFile(res, req, "index.html")
 }
 
 func HandlerUpload(res http.ResponseWriter, req *http.Request) {
