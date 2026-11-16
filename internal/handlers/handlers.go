@@ -29,19 +29,19 @@ func HandlerUpload(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	root, err := os.OpenRoot(curDir) //ограничение доступа вне директории
-	if err != nil {
-		http.Error(res, "internal error", http.StatusInternalServerError)
-		return
-	}
-	defer root.Close()
-
 	file, header, err := req.FormFile("myFile") //получение файла
 	if err != nil {
 		http.Error(res, "recieving error", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
+
+	root, err := os.OpenRoot(curDir) //ограничение доступа вне директории
+	if err != nil {
+		http.Error(res, "internal error", http.StatusInternalServerError)
+		return
+	}
+	defer root.Close()
 
 	data, err := io.ReadAll(file) //чтение полученного файла
 	if err != nil {
