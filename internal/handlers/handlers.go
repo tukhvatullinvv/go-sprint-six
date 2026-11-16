@@ -12,7 +12,7 @@ import (
 )
 
 func HandlerMain(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "../index.html") //изначально реализовывал через Getwd() и os.OpenRoot()
+	http.ServeFile(res, req, "index.html") //изначально реализовывал через Getwd() и os.OpenRoot()
 	//но были ошибки из-за разных расположений файлов main и index.html
 }
 
